@@ -4,24 +4,35 @@ import sys
 import json
 import time
 
-deviceId = 'aiboのdeviceId'
+deviceId = ''
 headers = {
 'Authorization': 'Bearer 取得したaccessToken',
 }
 
 TIME_OUT_LIMIT = 30
 
+#GETを使うときの
+def get_method(url):
+    response = requests.get(url, headers=headers)
+    return json.loads(response.text)
+
+#一匹めのdeviceIdを取得
+def get_deviceId():
+    get_result =get_method('https://public.api.aibo.com/v1/devices')
+    return get_result['devices'][0]['deviceId']
+
+#コマンド実行を行い、executionIdを返す
 def get_executionId(post_url, data):
     # POST API
     response = requests.post(post_url, headers=headers, data=data)
     post_result = json.loads(response.text)
     return post_result["executionId"]
 
+#コマンド実行後の結果取得
 def get_result(get_result_url):
     TimeOut = 0
     while True:
-        response = requests.get(get_result_url, headers=headers)
-        get_result = json.loads(response.text)
+        get_result =get_method(get_result_url)
         get_status = get_result["status"]
 
         if get_status == "SUCCEEDED":
@@ -37,6 +48,7 @@ def get_result(get_result_url):
         time.sleep(1)
     return get_result
 
+#実行したいコマンドとパラメーターを渡すと、実行して、結果を返す
 def exec_api(api_name, arguments):
     post_url = 'https://public.api.aibo.com/v1/devices/' + deviceId + '/capabilities/' + api_name + '/execute'
     data = '{"arguments":' + arguments + '}'  if arguments != '' else '{}'
@@ -53,10 +65,11 @@ def exec_api(api_name, arguments):
 if __name__ == '__main__':
     length = len(sys.argv)
     if length == 3:
-    	print(sys.argv[2])
-    	result = exec_api(sys.argv[1], sys.argv[2])
-    	print(result)
+        deviceId = get_deviceId()
+        result = exec_api(sys.argv[1], sys.argv[2])
+        print(result)
     elif length == 2:
+        deviceId = get_deviceId()
         result = exec_api(sys.argv[1], '')
         print(result)
     else :

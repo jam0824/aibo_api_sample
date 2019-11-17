@@ -9,6 +9,8 @@ accessTokenを取得して、headersの部分の修正を行ってください�
 
 accessTokenを取得したら、deviceIdを取得して変数deviceIdに代入してください。
 
+（現状、一匹目のdeviceIdを取得するメソッドは書いています。けど実行が遅くなるので、わざわざ毎度取得せずに最初から入れていた方が良いです）
+
 以下参照です。
 
 <https://developer.aibo.com/jp/docs#getdevices>
