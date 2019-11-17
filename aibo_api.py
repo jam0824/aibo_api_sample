@@ -58,10 +58,7 @@ def exec_api(api_name, arguments):
     print("get url: " + get_result_url)
     return get_result(get_result_url)
 
-#Action APIを実行するときはこんな感じ。コマンドプロンプトからはダブルクォーテーションはエスケープして渡す。
-#python aibo_api.py turn_around '{\"TurnSpeed\":2,\"TurnAngle\":180}'
-#Cognition APIを実行するときは以下。
-#python aibo_api3.py hungry_status
+
 if __name__ == '__main__':
     length = len(sys.argv)
     if length == 3:
